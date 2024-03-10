@@ -1,4 +1,4 @@
-const Employee = require("../../models/Employee");
+const Employee = require("../models/Employee");
 const mongoose = require("mongoose");
 
 const createEmployee = async (req, res) => {

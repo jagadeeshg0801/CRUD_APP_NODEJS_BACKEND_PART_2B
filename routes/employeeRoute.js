@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
-const employeeController = require('../CRUD_APP_NODEJS/controllers/EmployeeController');
+const employeeController = require('../controllers/EmployeeController');
 
 
 router.post('/add-emp', employeeController.createEmployee);
