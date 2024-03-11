@@ -1,3 +1,4 @@
+const e = require("express");
 const Employee = require("../models/Employee");
 const mongoose = require("mongoose");
 
@@ -34,32 +35,47 @@ const getEmployees = async (request, response) => {
 
 //get employee details by id
 const singleEmployee = async (req, res) => {
-    console.log('params', req.params)
-    try {
-       await this.singleEmployee1(req.params.id)
-        //  const id = mongoose.Types.ObjectId(req.params.id); // conversion bases on model in mongoDG
-        // console.log('id', id)
-        // const employeeDetails = await Employee.findById(req.params.id);
-        // if (!employeeDetails) {
-        //     res.status(404).json({ 'message': 'Sorry!, No Employeed found ' })
-        // } else {
-        //     res.status(201).json(employeeDetails)
-        // }
-    } catch (error) {
-        console.log('server Error.... ', error)
-    }
-
-}
-const  singleEmployee1= async (req, res) => {
-    console.log('id',typeof req.params.id)
+    console.log('id', typeof req.params.id)
 
     try {
-        const employee = await Employee.findOne({ _id:  req.params.id });
-        console.log('Found employee:',employee);
-        res.status(201).json(employee);
+        const employee = await Employee.findOne({ _id: req.params.id });
+        console.log('Found employee:', employee);
+        if (employee) {
+            res.status(201).json({"res": employee});
+        }
+        else {
+            res.status(402).json({ msg: 'No Employee Available with id :: '+ req.params.id});
+        }
     } catch (error) {
         console.error('Error finding employee:', error);
     }
 }
 
-module.exports = { createEmployee, getEmployees, singleEmployee1 }
+
+// update employee details by Id
+const updateEmployeeDetails = async (req, res) => {
+    try {
+        const { name, email, city, phone } = req.body;
+        const employee = await Employee.findByIdAndUpdate(req.params.id, {
+            name, email, city, phone
+        })
+        if (!!employee) {
+            res.status(202).json(employee);
+        } else {
+            console.log("No Details found..!")
+        }
+    } catch (error) {
+        console.log('Update failed due to....', error)
+    }
+}
+
+const deleteEmployeeById = async (req, res) => {
+    const emp = await Employee.findByIdAndDelete(req.params.id);
+    if (emp) {
+        res.status(202).json(emp);
+    } else {
+        res.status(404).json("No Employee Found")
+    }
+}
+
+module.exports = { createEmployee, getEmployees, singleEmployee, updateEmployeeDetails, deleteEmployeeById }
