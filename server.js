@@ -2,6 +2,7 @@ const express = require("express");
 const dotEnv = require("dotenv");
 const app = express();
 const { MongoClient } = require("mongodb");
+const cors = require("cors")
 
 const employeeRoutes = require("./routes/employeeRoute");
 const bodyParser = require("body-parser");
@@ -26,7 +27,14 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
     console.log('ABCD', error)
 });
 app.use(bodyParser.json())
+app.use(cors({ origin: 'http://localhost:4200' })); // For CORS issue resolved  or below's
+// app.use(cors({
+//     origin: 'http://localhost:4200', // Allow requests from this origin
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these methods
+//     allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
+//   }));
 app.use('/emp', employeeRoutes) // router connections middleware
+
 
 
 app.listen(port, () => {
